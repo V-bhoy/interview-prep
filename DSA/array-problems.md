@@ -1,6 +1,221 @@
 
 # Array Problems and Solutions
 
+## List Of Easy Problems
+
+### 1. Find the largest element in an array
+- **Brute force approach:** Arrays.sort() and return last element. In this case, time complexity would be O(n log n) and space complexity would be O(1)
+- **Optimal approach:** Traverse the entire array and compare with the maximum which is assumed to be the first element
+```java
+public int largestNumber(int[] nums){
+   int max = nums[0];
+   for(int i=0; i<nums.length; i++){
+      max = Math.max(nums[i],max);
+   }
+   return max;
+}
+```
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+---
+### 2. Find the second largest element in an array without sorting
+- **Brute force approach:**
+     - Arrays.sort() and run a loop from n-2 index to check if its not equal to last element as it can have duplicates.
+     - As soon as you find the element, return it.
+     - In this case, time complexity would be O(n log n + n) and space complexity would be O(1).
+- **Better approach:**
+    - Run a loop to find the largest element and store it in max variable as in the previous problem.
+    - Initialize other variable, say x with -1 to store second largest.
+    - Run a second loop and check if its not equal to max and greater than the x and return it at the end of loop.
+    - In this case, time complexity would be O(2n) and space complexity would be O(1).
+- **Optimal approach:**
+    - Create 2 variables, one to keep track of largest and other to keep track of second largest
+    - Traverse through the array
+    - if the element is greater than equal to largest, update second-largest with prev value of largest and largest with the element
+    - otherwise, check if its greater than second largest and update second largest.
+```java
+public int secondLargestNumber(int[] nums){ // 10 20 30
+   int max = nums[0];
+   int secondLargest = -1;
+   for(int i=0; i<nums.length; i++){
+      if(nums[i]>max){
+        secondLargest = max;
+        max = nums[i];
+      }
+      else if(nums[i] != max && nums[i] > secondLargest){
+         secondLargest = nums[i];
+      }
+   }   
+   return secondLargest;
+}
+```
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+---
+## 3. Check if the array is sorted 
+- **Solution:**
+     - Run a loop from index 1 to n-1 where n is length of the array
+     - return false if you find arr[i-1] > arr[i] else return true
+```java
+public boolean isArraySorted(int[] nums){
+   for(int i=1; i<nums.length; i++){
+      if(nums[i-1]>nums[i]){
+        return false;
+      }
+   }   
+   return true;
+}
+```
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)    
+---
+## 4. Remove duplicates from a sorted array
+### Problem
+Given an integer array nums sorted in non-decreasing order, remove the duplicates in-place such that each unique element appears only once. The relative order of the elements should be kept the same. Then return the number of unique elements in nums.
+Consider the number of unique elements of nums to be k, to get accepted, you need to do the following things:
+Change the array nums such that the first k elements of nums contain the unique elements in the order they were present in nums initially. The remaining elements of nums are not important as well as the size of nums.
+Return k.
+### Visual Explanation
+```
+Input: nums = [1,1,2]
+Output: 2, nums = [1,2,_]
+Explanation: Your function should return k = 2, with the first two elements of nums being 1 and 2 respectively.
+It does not matter what you leave beyond the returned k (hence they are underscores).
+```
+### Brute Force Approach
+- Declare a HashSet.
+- Run a for loop from starting to the end and put every element of the array in the set.
+- Store size of the set in a variable K.
+- Now put all elements of the set in the array from the starting of the array.
+- Return K.
+```java
+public int removeDuplicates(int[] nums) {
+    HashSet <Integer> set = new HashSet <>();
+    for (int i = 0; i < nums.length; i++) {
+       set.add(nums[i]);
+    }
+    int j=0
+    for(int x: set){
+       nums[j++] = x;
+    }
+    return set.size();
+   
+}
+```
+- **Time Complexity:** O(n) + O(n) = O(2n)
+- **Space Complexity:** O(n)
+
+### Optimal Approach
+- use 2 pointers, lets say i and j
+- i points at index 0
+- run a loop from 1 to n where j points at 1
+- compare value at j with value at i
+- if its equal move ahead
+- if its not equal, increment i to i+1 and set the value with the value at j
+- After completion, return i+1 which is the number of unique elements
+```java
+public int removeDuplicates(int[] nums) {
+    int i = 0;
+    for (int j = 1; j < nums.length; j++) {
+       if(nums[i] != nums[j]){
+         nums[++i] = nums[j];
+       }
+    }
+    return i+1;
+}
+```
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+---
+## 5. Maximum Consecutive Ones
+
+### Problem
+Given a binary array nums, return the maximum number of consecutive 1's in the array.
+
+### Visual Explanation
+```
+Input: nums = [1,1,0,1,1,1]
+Output: 3
+Explanation: The first two digits or the last three digits are consecutive 1s. The maximum number of consecutive 1s is 3.
+
+```
+### Solution (Very straightforward)
+- We keep maxLength = 0
+- We keep a count = 0, to keep track of the count of consecutive 1 and compare with maxLength and update
+- At each step we increment count 
+- If 0 occurs, we set the count back to 0
+
+```java
+public int maxConsecutiveOnes(int[] nums) {
+    int max = 0;
+    int count = 0;
+    for (int i = 0; i < nums.length; i++) {
+       if(nums[i] == 1){
+         count++;
+         max = Math.max(max, count);
+       }else{
+         count = 0;
+       }
+    }
+    return max;
+}
+```
+
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+  
+---
+## 7. Move Zeroes To End
+
+### Problem
+Given an integer array nums, move all 0's to the end of it while maintaining the relative order of the non-zero elements.
+
+### Visual Explanation
+```
+Input: nums = [0,1,0,3,12]
+Output: [1,3,12,0,0]
+
+```
+### Brute Force Approach
+- We create an extra array to store all the non zero elements 
+- Copy the non zero element at the beginning of original array
+- Replace the remaining positions of the original array by 0
+- This takes time complexity = O(n) + O(k) + O(n-k) = O(2n) and space complexity = O(n), worst case => no zeroes
+
+### Optimal Approach
+- We use 2 pointers 
+- We run a loop to find first index of 0 and assign it to a pointer j, if we don’t find any 0, we will not perform the following steps.
+- While moving the pointer i from j+1 to n, we will do the following:
+   - If a[i] != 0, Wwe will swap a[i] and a[j].
+   -  Now, the current j is pointing to the non-zero element a[i]. So, we will shift the pointer j by 1 so that it can again point to the first      zero.
+- Finally, our array will be set in the right manner.
+
+```java
+public int[] moveZeroes(int[] nums) {
+    int j = -1;
+    for(int i=0; i<nums.length; i++){
+        if(nums[i]==0){
+           j=i;
+           break;
+        }
+    }
+    if(j==-1) return nums;
+    for(int i=j+1; i<nums.length; i++){
+      if(nums[i]!=0){
+         nums[j++] = nums[i];
+         nums[i] = 0;
+      }
+    }
+    return nums;
+}
+```
+
+- **Time Complexity:** O(k) + O(n-k) = O(n)
+- **Space Complexity:** O(1)
+  
+---
+
+
 ## 1. Maximum Subarray Sum (Kadane's Algorithm)
 
 ### Problem
@@ -484,7 +699,73 @@ private void reverse(int[] nums, int start, int end){
 - **Space Complexity:** O(1) (No extra space is used)
 
 ---
+## 6. Valid Sudoku
 
+### Problem
+Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+
+Each row must contain the digits 1-9 without repetition.
+Each column must contain the digits 1-9 without repetition.
+Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+Note:
+
+A Sudoku board (partially filled) could be valid but is not necessarily solvable.
+Only the filled cells need to be validated according to the mentioned rules.
+
+### Visual Explanation
+```
+Input: board = 
+[["8","3",".",".","7",".",".",".","."]
+,["6",".",".","1","9","5",".",".","."]
+,[".","9","8",".",".",".",".","6","."]
+,["8",".",".",".","6",".",".",".","3"]
+,["4",".",".","8",".","3",".",".","1"]
+,["7",".",".",".","2",".",".",".","6"]
+,[".","6",".",".",".",".","2","8","."]
+,[".",".",".","4","1","9",".",".","5"]
+,[".",".",".",".","8",".",".","7","9"]]
+Output: false
+Explanation: Since there are two 8's in the top left 3x3 sub-box, it is invalid.
+
+```
+### Solution
+
+- We need nested loops to access an item in 9 x 9 board.
+- The row index will be identified by the the outer loop.
+- The column index will be identified by the inner loop.
+- Each 3x3 grid in the board can be seen as a unit at a particular index
+- So, in a 9 x 9 board we would have 3x3 grid at row indices - 0, 1, 2 and column indices - 0, 1, 2
+- how would we calculate these unit indices, we can divide each index at row and column by 3
+- For example: grid 1 include row indices - 0, 1, 2 & column indices - 0, 1, 2
+     - If we divide each by 3, it will result into - `int 0`
+     - So, the grid is placed at row 0 and column 0
+- To find, if all the filled elements are unique, we can make use of hashset of string to determine if the value is already present at row, column and grid.
+
+```java
+ public boolean isValidSudoku(char[][] board) {
+        Set<String> boardSet = new HashSet<>();
+
+        for(int i=0; i<9; i++){
+            for(int j=0; j<9; j++){
+                char num = board[i][j];
+                if(num != '.'){
+                    if(!boardSet.add(num+" at row "+i) || 
+                       !boardSet.add(num+" at col "+j) || 
+                       !boardSet.add(num+" at grid "+i/3+"-"+j/3)){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;  
+    }
+```
+- Since the board size is fixed, we have constant time and space complexity.
+- If there was dynamic board size , the complexity would be O(n^2).
+- **Time Complexity:** O(1)
+- **Space Complexity:** O(1)
+
+---
 ## 2. Custom Resizable Array Implementation in Java
 
 ### Problem
