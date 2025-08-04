@@ -214,7 +214,705 @@ public int[] moveZeroes(int[] nums) {
 - **Space Complexity:** O(1)
   
 ---
+## 8. Find Union Of 2 sorted arrays
 
+### Problem
+Given 2 an integer array nums, return all distinct elements belonging to each arrays in a single array.
+
+### Visual Explanation
+```
+arr1[] = {1,2,3,4,5,6,7,8,9,10}
+arr2[] = {2,3,4,4,5,11,12}
+arr = {1,2,3,4,5,6,7,8,9,10,11,12} = Union of arr1 ,arr2.
+
+```
+### Brute Force Approach
+- Create an hashset to store all the distinct elements of both arrays.
+- Create a resultant array.
+- Add each element to the set and copy the resultant to the array and sort the array once done.
+- This takes time complexity = O(n1+n2) + O((n1+n2)-k) + O((n1+n2)-k)log(n1+n2)-k) = O(2n-k+(n-k)log(n-k)) = O(2n+nlogn)
+- and space complexity = O(n-k) = O(n), worst case => no duplicates, where n = n1+n2
+```java
+  public int[] union(int[] nums1, int[] nums2) {
+    Set<Integer> set = new HashSet<>();
+    for(int i=0; i<nums1.length; i++){
+       set.add(nums1[i]);
+    }
+    for(int i=0; i<nums2.length; i++){
+       set.add(nums2[i]);
+    }
+    int[] list = new int[set.size()];
+    int j=0;
+    for(int x: set){
+       list.add(x);
+    }
+    Arrays.sort(list);
+    return list;
+}
+```
+### Optimal Approach (works only for sorted array)
+- We use 2 pointers pointing index 0 pf nums1 and nums2
+- We create a resultant array to store the union of two arrays
+- While traversing we may encounter three cases:
+   - arr1[i] == arr2[j] , we found a common element, so insert only one element in the union. Let’s insert arr[i] in union and increment i.
+   - while inserting always check whether the last element in the union is equal or not to the element to be inserted to avoid duplicates.
+   - arr1[i] < arr2[j], if last element in  union is not equal to arr1[ i ],then insert in union else don’t insert. After checking increment i.
+   - arr1[i] > arr2[j], if the last element in the union vector is not equal to arr2[ j ], then insert in the union, else don’t insert. After checking increment j
+  
+```java
+public List<Integer> union(int[] nums1, int[] nums2) {
+    List<Integer> union = new ArrayList<>();
+    int n = union.size();
+    int i=0;
+    int j=0;
+    while(i < nums1.length && j < nums2.length){
+       int val;
+       if(nums1[i] == nums2[j]){
+         val = nums1[i];
+         i++;
+         j++;
+       }else if(nums1[i] < nums2[j]){
+         val = nums1[i];
+         i++;
+       }else {
+         val = nums2[j];
+         j++;
+       }
+        // Avoid duplicates
+        if (union.isEmpty() || union.get(union.size() - 1) != val) {
+            union.add(nums1[i]);
+        }
+
+    }
+     while (i < nums1.length) {
+        if (union.isEmpty() || union.get(union.size() - 1) != nums1[i]) {
+            union.add(nums1[i]);
+        }
+        i++;
+    }
+      // Remaining elements in nums2
+    while (j < nums2.length) {
+        if (union.isEmpty() || union.get(union.size() - 1) != nums2[j]) {
+            union.add(nums2[j]);
+        }
+        j++;
+    }
+    return union;
+}
+```
+
+- **Time Complexity:** O(n+m)
+- **Space Complexity:** O(1) // ignoring the space taken for resultant o/p
+  
+---
+## 9. Find Intersection Of 2 sorted arrays
+
+### Problem
+Given 2 an integer array nums, return all common elements belonging to both arrays in a single array.
+
+### Visual Explanation
+```
+arr1[] = {1,2,3,4,4, 4, 5,6,7,8,9,10}
+arr2[] = {2,3,4,4,5,11,12}
+arr = {2,3,4,4,5} = Union of arr1 ,arr2.
+
+```
+### Brute Force Approach
+- Create a list to store all the visited elements belonging to second array.
+- Create a resultant array.
+- Run a nested loop from i to n1 and j to n2. If any of the element is equal, check if there is an element at index.
+- If the element is already visited, then do not add to the resultant else add.
+- This takes time complexity = O(n1*n2)
+- and space complexity = O(n2) 
+```java
+  public int[] intersection(int[] nums1, int[] nums2) {
+    List<Integer> result = new ArrayList<>();
+    boolean[] visited = new int[nums2.length];
+    for(int i=0; i<nums1.length; i++){
+       for(int j=0; j<nums2.length; j++){
+           if(nums1[i] == nums2[j] && !visited[j]){
+               result.add(nums1[i]);
+               visited[j] = true;
+           }
+           if(nums1[i] < nums2[j]){
+              break;
+           }
+        }
+    }
+    int[] resArr = new int[result.size()];
+    for (int i = 0; i < result.size(); i++) {
+        resArr[i] = result.get(i);
+    }
+    return resArr;
+}
+```
+### Optimal Approach (works only for sorted array)
+- We use 2 pointers pointing index 0 pf nums1 and nums2
+- We create a resultant array to store the intersection of two arrays
+- While traversing we may encounter three cases:
+   - arr1[i] == arr2[j] , we found a common element, so insert only one element in the result. increment i and j.
+   - arr1[i] < arr2[j], increment i.
+   - arr1[i] > arr2[j], increment j.
+  
+```java
+public List<Integer> intersection(int[] nums1, int[] nums2) {
+    List<Integer> result = new ArrayList<>();
+    int i=0;
+    int j=0;
+    while(i < nums1.length && j < nums2.length){
+       if(nums1[i] == nums2[j]){
+         result.add(nums1[i]);
+         i++;
+         j++;
+       }else if(nums1[i] < nums2[j]){
+         i++;
+       }else {
+         j++;
+       }
+    }
+    return result;
+}
+```
+
+- **Time Complexity:** O(n+m) // since we are traversing through each array once.
+- **Space Complexity:** O(1) // ignoring the space taken for resultant o/p
+  
+---
+## 10. Find missing number
+
+### Problem
+Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.
+
+### Visual Explanation
+```
+Input: nums = [3,0,1]
+Output: 2
+Explanation:
+n = 3 since there are 3 numbers, so all numbers are in the range [0,3]. 2 is the missing number in the range since it does not appear in nums.
+```
+### Brute Force Approach
+```java
+  public int missingNumber(int[] nums) {
+  // run loop for numbers 0 to n
+   for(int i=0; i<=nums.length; i++){
+     int flag = 0;
+     // run a loop to traverse the array
+     for(int j=0; j<nums.length; j++){
+        check if number i is present in array ans set flag to true if found and break
+        if(nums[j] == i){
+           flag = 1;
+           break;
+        }
+     }
+     // if flag is not found, return the number that is not found
+     if(flag==0){
+       return i;
+     }
+  }
+}
+```
+- **Time Complexity:** O(n^2)
+- **Space Complexity:** O(1)
+### Better Approach
+```java
+  public int missingNumber(int[] nums) {
+   // create a hash array
+   int[] hash = new int[nums.length + 1];
+  // run loop thriugh array and set it to 1 for that particular index
+   for(int i=0; i<nums.length; i++){
+      hash[nums[i]] = 1;
+    }
+     // return the index in hash that is not present
+   for(int i=0; i<hash.length; i++){
+       if(hash[i]==0) return i;
+   } 
+}
+```
+- **Time Complexity:** O(2n)
+- **Space Complexity:** O(n)
+### Optimal Approach 
+- calculate actual sum from 1  to n and calculate sum of array
+- difference between sum of array and total sum is the element  
+```java
+public int missingNumber(int[] nums) {
+    int n = nums.length;
+    int total = n * (n+1)/2;
+    int sum = 0;
+    for(int i=0; i<n; i++){
+       sum+=nums[i];
+    }
+    return total-sum;
+}
+```
+
+- **Time Complexity:** O(n) 
+- **Space Complexity:** O(1) 
+  
+---
+## 11.Majority Element
+
+### Problem
+Given an array nums of size n, return the majority element.
+The majority element is the element that appears more than ⌊n / 2⌋ times. 
+You may assume that the majority element always exists in the array.
+
+
+### Visual Explanation
+```
+Input: nums = [3,2,3]
+Output: 3
+```
+### Brute Force Approach
+```java
+  public int majorityNumber(int[] nums) {
+  int n = nums.length/2;
+   for(int i=0; i<nums.length; i++){
+     int count = 0;
+     for(int j=0; j<nums.length; j++){
+        if(nums[i] == nums[j]){
+           count++;
+        }
+     }
+     if(count>n){
+       return nums[i];
+     }
+  }
+}
+```
+- **Time Complexity:** O(n^2)
+- **Space Complexity:** O(1)
+### Better Approach
+- Include hashmap to stpre frequency of each element
+```java
+  public int missingNumber(int[] nums) {
+    int n = nums.length/2;
+    Map<Integer, Integer> map = new HashMap<>();
+    for(int i=0; i<nums.length; i++){
+       if(map.containsKey(nums[i])){
+          map.put(nums[i], map.get(nums[i])+ 1);
+       }else{
+          map.put(nums[i], 1);
+       }
+    }
+    for(Map.Entry<Integer, Integer> entry: map.entrySet()){
+         if(entry.getValue() > n){
+            return entry.getKey();
+         }
+     }
+}
+```
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+### Optimal Approach 
+- Using Moore's Voting Algorithm
+- It states that - Pairs of different elements cancel each other out, leaving the majority element (if any) at the end.
+- Maintain an element and a count.
+- If its equal to element, increment count else decrement count
+- If count == 0, set element to the new element as the previous subarray have cancelled out each other and there is no majority element present.
+```java
+public int missingNumber(int[] nums) {
+    int n = nums.length/2;
+    int curr = nums[0];
+    int count = 0;
+    for(int i=0; i<nums.length; i++){
+       if(count == 0){
+           curr = nums[i];
+       }
+       if(nums[i] == curr){
+          count++;
+       }else{
+          count--;
+       }
+    }
+    // verify the majority element - we need to verify if the problem states that, the element might not exist as well
+    count = 0;
+      for (int num : nums) {
+        if (num == curr) {
+            count++;
+        }
+    }
+    if(count > n){
+       return curr;
+    }
+    return -1;
+}
+```
+
+- **Time Complexity:** O(n) 
+- **Space Complexity:** O(1) 
+  
+---
+## 11.Majority Element Part 2
+
+### Problem
+Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times.
+
+
+### Visual Explanation
+```
+Input: nums = [1,2]
+Output: [1,2]
+```
+### Observations
+- Think about the possible number of elements that can appear more than ⌊ n/3 ⌋ times in the array
+- It can be at most two. Why?
+``` java
+- Let’s assume there are k such elements that appear more than ⌊n/3⌋ times
+- total frequency = k * (n/3 + 1) should be <= n
+- if we try k= 3 --> 3 * (n/3 +1) =n+1 > n
+- So k = 3 is not possible
+- Try k = 2:
+   - 2 * (n/3 + 1) = 2n/3 + 2 <= n
+So at most 2 elements can occur more than n/3 times.
+```
+### Brute Force Approach
+```java
+public List<Integer> majorityNumber(int[] nums) {
+  List<Integer> ans = new ArrayList<>(); 
+  int n = nums.length/3;
+  for(int i=0; i<nums.length; i++){
+     if(ans.size() == 0 || ans[0] != nums[i]){
+        int count = 0;
+        for(int j=0; j<nums.length; j++){
+           if(nums[i] == nums[j]){
+               count++;
+            }
+        }
+        if(count>n){
+           ans.add(nums[i]);
+        }  
+     }
+     if(ans.size() == 2){
+       break;
+     }
+  }
+  return ans;
+}
+```
+- **Time Complexity:** O(n^2)
+- **Space Complexity:** O(1)
+### Better Approach
+- Include hashmap to stpre frequency of each element
+```java
+  public int missingNumber(int[] nums) {
+    int n = nums.length/3;
+    List<Integer> ans = new ArrayList<>(); 
+    Map<Integer, Integer> map = new HashMap<>();
+    for(int i=0; i<nums.length; i++){
+       if(map.containsKey(nums[i])){
+          map.put(nums[i], map.get(nums[i])+ 1);
+       }else{
+          map.put(nums[i], 1);
+       }
+    }
+    for(Map.Entry<Integer, Integer> entry: map.entrySet()){
+         if(entry.getValue() > n){
+            ans.add(entry.getKey());
+         }
+     }
+     return ans;
+}
+```
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+### Optimal Approach 
+- Using extended version of Moore's Voting Algorithm
+- It states that - Pairs of different elements cancel each other out, leaving the majority element (if any) at the end.
+- Maintain 2 elements and a count for each since we know that there would be at most 2 elements.
+- If its equal to element, increment count else decrement count
+- If count == 0, set element to the new element as the previous subarray have cancelled out each other and there is no majority element present.
+```java
+public int missingNumber(int[] nums) {
+    int n = nums.length/3;
+    List<Integer> ans = new ArrayList<>();
+    Integer num1 = null;
+    Integer num2 = null;
+    int count1 = 0;
+    int count2 = 0;
+    for(int num: nums){
+       if(num1 != null && num1 == num){
+           count1++;
+       }
+       else if(num2 != null && num2 == num){
+         count2++;
+       }
+       else if(count1==0){
+          num1 = num;
+          count1++;
+       }else if(count2 == 0){
+          num2 = num;
+          count2++;
+       }else{
+          count1--;
+          count2--;
+        }
+    }
+    // verify the majority element - we need to verify if the problem states that, the element might not exist as well
+      count1 = 0;
+      count2 = 0;
+      for (int num : nums) {
+        if (num == num1) count1++;
+        else if (num == num2) count2++;
+    }
+    if(count1 > n) ans.add(num1);
+    if(count2 > n) ans.add(num2);
+    return ans;
+}
+```
+
+- **Time Complexity:** O(n) 
+- **Space Complexity:** O(1) 
+  
+---
+## 12. Missing And Repeated Values
+
+### Problem
+You are given a 0-indexed 2D integer matrix grid of size n * n with values in the range [1, n2]. Each integer appears exactly once except a which appears twice and b which is missing. The task is to find the repeating and missing numbers a and b.
+Return a 0-indexed integer array ans of size 2 where ans[0] equals to a and ans[1] equals to b.
+
+### Visual Explanation
+```
+Input: grid = [[9,1,7],[8,9,2],[3,4,6]]
+Output: [9,5]
+Explanation: Number 9 is repeated and number 5 is missing so the answer is [9,5].
+```
+### Brute Force Approach
+```java
+public List<Integer> missingAndRepeatedNumber(int[][] nums) {
+  List<Integer> ans = new ArrayList<>();
+  int n = nums.length * nums.length;
+  for(int i=1; i<=n; i++){
+     int count= 0;
+     for(int j=0; j<nums.length; j++){
+        for(int k=0; k<nums.length; k++){
+            if(nums[j][k] == i){
+              count++;
+            }
+        }
+     }
+     if(count == 0) ans[1] = i;
+     else if(count == 2) ans[0] = i;
+  }
+  return ans;
+}
+```
+- **Time Complexity:** O(n^3)
+- **Space Complexity:** O(1)
+### Better Approach
+- Use hashing technique
+```java
+  public int[] findMissingAndRepeatedValues(int[][] grid) {
+         int[] ans = new int[2];
+         int n = grid.length * grid.length;
+         // create hash array
+         int[] visited = new int[n+1]; // since indexed from 0
+            for(int j=0; j<grid.length; j++){
+               int count = 0;
+               for(int k=0; k<grid.length; k++){
+                    // store count
+                    visited[grid[j][k]]++;
+                }
+            }
+            for(int i=1; i<=n; i++){
+                if(visited[i]==0) ans[1] = i;
+                else if(visited[i]==2) ans[0] = i;
+            }
+        return ans;
+    }
+```
+- **Time Complexity:** O(n^2)
+- **Space Complexity:** O(n)
+### Optimal Approach 
+- mathematical equations
+- calculate sum of all natural nums and sum of square of all natural nums 
+- (a + b)(a - b) = a^2 - b^2
+- we have a - b = v1 where a is sum of all numbers in grid and b is sum of all n natural numbers.
+- we have a^2 - b^2 = v2 where a is sum of square all numbers in grid and b is sum of square of all n natural numbers.
+- (a+b) = v2/v1 = v
+-  (a+b)+(a-b) = v + v1 --> 2a = v + v1 --> a = v + v1 / 2 --> x // missing number
+-  a + b = v --> b = v - x // repeated number
+```java
+public int[] findMissingAndRepeatedValues(int[][] grid) {
+        int[] ans = new int[2];
+    int n = grid.length * grid.length;
+
+    long expectedSum = n * (n + 1L) / 2;
+    long expectedSquareSum = (n * (n + 1L) * (2 * n + 1L)) / 6;
+
+    long actualSum = 0;
+    long actualSquareSum = 0;
+
+    for (int i = 0; i < grid.length; i++) {
+        for (int j = 0; j < grid.length; j++) {
+            long val = grid[i][j];
+            actualSum += val;
+            actualSquareSum += val * val;
+        }
+    }
+
+    long sumDiff = expectedSum - actualSum;             // x - y
+    long squareSumDiff = expectedSquareSum - actualSquareSum; // x^2 - y^2
+
+    long xPlusY = squareSumDiff / sumDiff;              // x + y
+    long missing = (sumDiff + xPlusY) / 2;              // x
+    long repeated = xPlusY - missing;                   // y
+
+    ans[0] = (int) repeated;
+    ans[1] = (int) missing;
+    return ans;
+    }
+```
+
+- **Time Complexity:** O(n^2) 
+- **Space Complexity:** O(1) 
+  
+---
+## 12. Merge 2 sorted arrays without extra space
+
+### Problem
+You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively.
+Merge nums1 and nums2 into a single array sorted in non-decreasing order.
+The final sorted array should not be returned by the function, but instead be stored inside the array nums1. To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged, and the last n elements are set to 0 and should be ignored. nums2 has a length of n`.
+
+### Visual Explanation
+```
+Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
+Output: [1,2,2,3,5,6]
+Explanation: The arrays we are merging are [1,2,3] and [2,5,6].
+The result of the merge is [1,2,2,3,5,6] with the underlined elements coming from nums1.
+```
+### Brute Force Approach
+- Without the extra space constraint:
+- we would have created an array of size n + m
+- keep tow pointers at index 0 for each array and k = 0 for result arr
+- while(i<n && j<m)
+     - if a1[i]<=a2[j] --> a[k] = a1[i]; i++; k++;
+     - else a[k] = a2[j]; j++; k++;
+- while(i < n) a[k++] = a1[i++];
+- while(i < m) a[k++] = a2[j++];
+- copy the result arr to nums1;
+- Drawback: uses extra space
+```java
+public void merge(int[] nums1, int m, int[] nums2, int n) {
+       if(n==0){
+         return;
+       }
+       int[] temp = new int[n+m];
+       int i=0;
+       int j=0;
+       int k=0;
+       while(i<m && j<n){
+         if(nums1[i]<= nums2[j]){
+            temp[k++] = nums1[i++];
+         }else{
+            temp[k++] = nums2[j++];
+         }
+       }
+       while(i<m){
+        temp[k++] = nums1[i++];
+       }
+       while(j<n){
+        temp[k++] = nums2[j++];
+       }
+       for(int a=0; a<temp.length; a++){
+         nums1[a] = temp[a];
+       }
+}
+```
+- **Time Complexity:** O(n+m)
+- **Space Complexity:** O(n+m)
+### Optimal Approach
+- Use pointers from last of each array and fill in nums1 while comparing. 
+```java
+  public void mergeSortedArrays(int[] nums1,  int[] nums2, int m, int n){
+    if(n==0){
+         return;
+       }
+       int i=m-1;
+       int j=n-1;
+       int k=(m+n)-1;
+       while(i>=0 && j>=0){
+        if(nums2[j]>=nums1[i]){
+          nums1[k--] = nums2[j--];
+        }else{
+           nums1[k--] = nums1[i--]; 
+        }
+       }
+       while(j>=0){
+        nums1[k--] = nums2[j--];
+  }
+}
+```
+- **Time Complexity:** O(m+n)
+- **Space Complexity:** O(1)
+---
+## 13. Single Number
+
+### Problem
+Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
+
+### Visual Explanation
+```
+Input: nums = [2,2,1]
+Output: 1
+```
+### Brute Force Approach
+```java
+  public int singleNumber(int[] nums) {
+   int n = nums.length;
+   for(int i=0; i<n; i++){
+     int count = 0;
+     for(int j=0; j<n; j++){
+       if(nums[j] == nums[i]){
+         count++;
+       }
+     }
+     if(count == 1){
+        return nums[i];
+     }
+   }
+   return -1;    
+ }
+```
+- **Time Complexity:** O(n^2)
+- **Space Complexity:** O(1)
+### Better Approach
+- Use hashing technique. 
+```java
+ public int singleNumber(int[] nums) {
+     Map<Integer, Integer> map = new HashMap<>();
+     for(int num: nums){
+       map.put(num, map.getOrDefault(num, 0)+1);
+     }
+     for(Map.Entry<Integer, Integer> entry: map.entrySet()){
+       if(entry.getValue() == 1){
+           return entry.getKey();
+        }
+     }
+     return -1;
+ }
+```
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+### Optimal Approach
+- perform the XOR of all elements of the array using a loop and the final XOR will be the answer.
+- Two important properties of XOR are the following:
+   - XOR of two same numbers is always 0 i.e. a ^ a = 0. ←Property 1.
+   - XOR of a number with 0 will result in the number itself i.e. 0 ^ a = a.  ←Property 2
+   - if we perform the XOR of all the numbers of the array elements, we will be left with a single number.
+```java
+  public int singleNumber(int[] nums) {
+    // xorr of all numbers
+    int xorr = 0;
+     for (int i = 0; i < nums.length; i++) {
+            xorr = xorr ^ nums[i];
+     }
+     return xorr;
+ }
+```
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+---
 
 ## 1. Maximum Subarray Sum (Kadane's Algorithm)
 
