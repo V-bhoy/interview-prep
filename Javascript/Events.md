@@ -29,15 +29,17 @@ const btn = document.querySelector("button");
 btn.onclick = function () {
   alert("Button clicked!");
 };
+// JS handling has more priority than inline handling
 ```
 **3.  addEventListener() (Best Practice)**
+- it takes type of event and a callback function which is an event handler
 ``` javascript
 btn.addEventListener("click", () => {
   alert("Clicked with addEventListener");
 });
 ```
 ### NOTE:
-- JavaScript automatically passes an event object to the event handler:
+- JavaScript automatically passes an event object to the event handler which has all the metadata about the event:
 ``` javascript
 button.addEventListener("click", function(event) {
   console.log(event);         // Info about the click
@@ -45,6 +47,7 @@ button.addEventListener("click", function(event) {
 });
 ```
 -  Removing an Event
+-  the callback reference should be same to remove
 ``` javascript
 function greet() {
   console.log("Hi!");
@@ -52,4 +55,20 @@ function greet() {
 }
 button.addEventListener("click", greet);
 ```
+### Why is it important to remove an event listener
+- ```btn.addEventListener("click", handleClick)```
+- The function handleClick becomes a closure, which closes over the btn element and any variables in its lexical scope.
+- Even if you remove the DOM element (btn.remove()), the event listener still holds a reference to it through the closure.
+- This prevents garbage collection of btn and its scope variables, causing a memory leak.
+- In Single Page Applications (SPA), components and elements are frequently added/removed without full page reloads.
+- If event listeners are not properly cleaned up:
+    - Memory keeps growing.
+    - Performance degrades.
+    - Unexpected bugs or duplicate event triggers may occur.
+- Correct cleanup:
+``` javascript
+btn.removeEventListener("click", handleClick);
+btn.remove();
+```
+
 
