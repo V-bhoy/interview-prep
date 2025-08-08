@@ -59,16 +59,53 @@
 - underlying structure of DB is the data model.
 - ex: ER model, relational model etc.
 
- 
-### Difference betweeen data model and schema
-- data model designs the logic and rules of how data should be stored and accessed
-- schema defines the design of the actual database as per the chosen data model
-- data model design is abstract and focuses on how data shoould be represented and related
-- schema design is concrete and focuses on what the database should contain used to actually build it.
+### Database Languages
+- You need a language to interact with the databases.
+- **Data Definition Language (DDL)**
+    - used to specify the database schema
+    - involves consistency constraints to be checked every time DB is updated
+- **Data Manipulation Language (DML)**
+    - used to specify the database queries and updates.
+    - Involves
+        - retrieval of data
+        - insertion of new data
+        - deletion of data
+        - updating existing data
+- Practically, both the languages are part of single DB language like SQL.
 
-### Difference between database and database schema
-- The database contains interrelated data
-- Database schema is a structural view of data
-- DB contains the data while DB schema does not contain any data of its own
-- Data Changes while schema does not change
+### How does the application access database?
+- through APIs
+- through an interface that allows communication between two entities
+- example: JDBC in java, allows Java application to interact with database.
+
+### Database Administrator (DBA)
+- has control of both data and the programs that access those data
+- functions:
+     - schema definition
+     - storage structire and access methods
+     - schema modifications
+     - authorization control
+     - routine maintenance
+          - periodic backups
+          - security pathes
+          - upgrades
+
+### DBMS Application Architecture
+- **T1 tier architecture**
+   - client, server and database exist in the same machine
+- **T2 tier architecture**
+   - partitioned into 2 components
+   - client and DB interacts over an interface like JDBC
+   - client sends direct queries to the database and fetches data
+- **T3 tier architecture**
+   - partitioned into 3 logical components
+   - client is just frontend and doesn't contain direct DB calls.
+   - client communicates to the app server and app server communicates with the DB system to access data.
+   - Advantages:
+       - stability due to distributed applicaton server
+       - minimal chances of data corruption since app server acts as a middle layer between client and DB
+       - increased security since client does not have direct access to DB
+  
+
+
 
