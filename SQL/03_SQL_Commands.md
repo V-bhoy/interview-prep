@@ -251,3 +251,22 @@ SET autocommit = 0; -- now you must explicitly COMMIT or ROLLBACK
 - Changes are not saved permanently until you explicitly run COMMIT.
 - If you exit the session or run ROLLBACK, the uncommitted changes are lost.
 - For transaction control (TCL) to make sense, autocommit must be OFF.
+---
+### Concept of dual tables
+- allows to use SELECT command without using FROM clause or having table
+- these are dummy tables that are already created by MySQL itself.
+- The significance of dual tables is that we can make temporary changes without disturbing the user-defined tables.
+- You can find the current time of the system, can perform mathematical
+calculations using dual tables, convert the string from lower-case to
+upper-case and vice-versa, etc
+``` sql
+-- syntax
+SELECT <STATEMENT_TO_EXECUTE>;
+
+SELECT 1000 + 100;
+-- o/p = 1100
+
+SELECT ucase(“coding ninjas”);
+-- o/p = CODING NINJAS
+-- Other keywords - NOW(), current_timestamp(); will display time.
+```
