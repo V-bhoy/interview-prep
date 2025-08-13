@@ -69,6 +69,25 @@ RENAME TABLE Employees TO Staff;
 -- Rename a database (MySQL does not support directly; must create and move objects)
 ALTER DATABASE old_db_name MODIFY NAME = new_db_name; -- Works in some DBMS
 ```
+### Managing DB (DDL)
+``` sql
+-- create db
+CREATE DATABASE IF NOT EXISTS CompanyDB;
+
+-- choose db to execute commands or switch current db
+USE db-name;
+
+-- drop database
+DROP DATABASE IF EXISTS db-name;
+
+-- list all dbs in the server
+SHOW DATABASES;
+
+-- list all tables in the selected DB
+SHOW TABLES;
+
+
+```
 ## DQL/DRL (Data Query Language / Data Retrieval Language)
 - used to retrieve data from tables without modifying it.
 ### SELECT
