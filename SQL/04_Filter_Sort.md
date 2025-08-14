@@ -21,7 +21,7 @@ DELETE FROM employees
 WHERE salary < 55000;
 ```
 ### Using Comparison Operators
-- <, >, <=, >=, =
+- <, >, <=, >=, =, <> (not equal to)
 ``` sql
 SELECT * 
 FROM employees
