@@ -61,5 +61,32 @@ SET active = 0;
 UPDATE University SET Age = Age + 1;
 ```
 ## DELETE
+- used to delete records from existing table
+- does not reset auto increment on deletion
+- can be rolled back to the prev state if inside a transaction.
+- Safe Updates Mode is a setting in some database clients (like MySQL Workbench) that prevents you from running UPDATE or DELETE without a WHERE clause or a key filter. You can easily enable or disable it.
+- It’s a safety mechanism to avoid accidentally modifying or deleting all rows in a table.
+``` sql
+-- syntax
+DELETE FROM table_name
+WHERE condition;
+-- if you omit the WHERE clause, all rows in the table will be deleted (be careful!).
 
+DELETE FROM BankAccount
+WHERE Id = 2;
+-- This deletes the row where Id is 2.
+
+DELETE FROM BankAccount;
+-- Deletes every record in the table but keeps the table structure.
+
+START TRANSACTION;
+DELETE FROM BankAccount WHERE Id = 2;
+COMMIT;       -- permanent
+ROLLBACK;     -- ❌ does nothing now
+
+SET autocommit = 1; -- default
+START TRANSACTION;  -- overrides autocommit until commit/rollback
+DELETE FROM BankAccount WHERE Id = 2;
+ROLLBACK;           -- ✅ works here
+```
 ## RENAME
