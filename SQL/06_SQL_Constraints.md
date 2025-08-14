@@ -85,6 +85,8 @@ CREATE TABLE grades (
 -- You cannot reference only one part of the composite key unless that part is also unique in the parent table.
 -- if UNIQUE(student_id) was mentioned in the parent table, then it could be used for referencing.
 ```
+## NOTE
+- An attribute can be both foreign key and primary key in a table.
 ## NOT NULL
 - restricts the values to be not null
 - Applied at column level.
