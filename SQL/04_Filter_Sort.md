@@ -86,3 +86,23 @@ SELECT * FROM employee ORDER BY salary DESC;
 -- it will sort by last name in descending first and for similar last_name it will sort first_name in ascending order 
 SELECT * FROM customer ORDER BY last_name DESC, first_name ASC;
 ```
+---
+## DISTINCT Keyword
+- used to remove duplicate values from the result set, returning only unique values for the specified column(s).
+- It applies to the combination of columns listed in the SELECT statement.
+- DISTINCT works on all columns in the select list — the uniqueness check is done across the entire row, not per column individually.
+- It can be performance-heavy on large datasets because it requires sorting or hashing.
+- Use it only when you actually need unique results.
+``` sql
+-- fetch distinct values for department column
+SELECT DISTINCT department FROM company;
+
+-- ensures each pair of department and location appears only once in the results.
+-- If the exact same pair has already been seen, it removes duplicates.
+SELECT DISTINCT department, location
+FROM company;
+
+SELECT DISTINCT job_title
+FROM company
+WHERE department = 'IT';
+```
