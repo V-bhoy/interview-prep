@@ -71,7 +71,7 @@ WHERE prime_status IS NOT NULL;
 SELECT * FROM customer WHERE name LIKE '%p_';
 -- it can be anything like abcpn where abc --> % and n --> _ , so it matches %p_
 ```
---
+---
 ## ORDER BY Clause
 - used to sort the fetched result set for single/multiple columns in ascending or descending order.
 - ascending order is default when using ORDER BY 
