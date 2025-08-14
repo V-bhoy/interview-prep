@@ -85,6 +85,26 @@ CREATE TABLE grades (
 -- You cannot reference only one part of the composite key unless that part is also unique in the parent table.
 -- if UNIQUE(student_id) was mentioned in the parent table, then it could be used for referencing.
 ```
+- To avoid referential constraints and maintain referential integrity, we can follow cascading, or set foreign key to null or default.
+### ON DELETE CASCADE
+- when you delete a row from a parent table, all related rows in the child table are automatically deleted by the database.
+``` sql
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+        ON DELETE CASCADE
+);
+
+DELETE FROM customers WHERE customer_id = 1;
+-- The DB will automatically delete all rows in Orders where CustomerID = 1.
+-- Prevents orphan records (child rows pointing to non-existent parents).
+```
 ### ON UPDATE CASCADE
 - If the value of the referenced column in the parent table changes, automatically update the matching rows in the child table.
 ``` sql
@@ -104,6 +124,30 @@ UPDATE customers
 SET customer_id = 10
 WHERE customer_id = 1;
 -- the customer id in orders table is automatically updated
+```
+### ON DELETE SET NULL
+``` sql
+FOREIGN KEY (CustomerID)
+REFERENCES Customers(CustomerID)
+ON DELETE SET NULL;
+-- Children will keep existing, but the FK becomes NULL when the parent is deleted.
+```
+### ON DELETE SET DEFAULT
+- When a parent row is deleted, the child’s foreign key column will automatically be set to its default value instead of being deleted or set to NULL.
+``` sql
+CREATE TABLE Departments (
+    DeptID INT PRIMARY KEY,
+    DeptName VARCHAR(50)
+);
+
+CREATE TABLE Employees (
+    EmpID INT PRIMARY KEY,
+    EmpName VARCHAR(50),
+    DeptID INT DEFAULT 1,  -- Default is DeptID 1
+    FOREIGN KEY (DeptID) REFERENCES Departments(DeptID)
+    ON DELETE SET DEFAULT
+);
+-- Often used in cases like “Miscellaneous” or “General” buckets.
 ```
 ## NOTE
 - An attribute can be both foreign key and primary key in a table.
