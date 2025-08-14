@@ -85,6 +85,26 @@ CREATE TABLE grades (
 -- You cannot reference only one part of the composite key unless that part is also unique in the parent table.
 -- if UNIQUE(student_id) was mentioned in the parent table, then it could be used for referencing.
 ```
+### ON UPDATE CASCADE
+- If the value of the referenced column in the parent table changes, automatically update the matching rows in the child table.
+``` sql
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+        ON UPDATE CASCADE
+);
+
+UPDATE customers
+SET customer_id = 10
+WHERE customer_id = 1;
+-- the customer id in orders table is automatically updated
+```
 ## NOTE
 - An attribute can be both foreign key and primary key in a table.
 ## NOT NULL
