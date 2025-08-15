@@ -101,3 +101,12 @@ FROM Employees E1
 LEFT JOIN Employees E2
 ON E1.manager_id = E2.employee_id;
 ```
+## Join Tables Without Join Keyword
+``` sql
+-- syntax
+SELECT * FROM tableA, tableB WHERE tableA.id = tableB.id;
+
+SELECT p.ProjectID, p.ProjectName, e.EmpFname, E.EmpLname, e.EmailID
+FROM Project p, Employee e WHERE p.EmpID = e.EmpID;
+
+```
