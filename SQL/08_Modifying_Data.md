@@ -89,4 +89,40 @@ START TRANSACTION;  -- overrides autocommit until commit/rollback
 DELETE FROM BankAccount WHERE Id = 2;
 ROLLBACK;           -- ✅ works here
 ```
-## RENAME
+## REPLACE
+- used as combination of INSERT and UPDATE
+- If the row does not exist (based on a primary key or unique key), it inserts it.
+- If the row already exists (same primary key/unique key), it deletes the existing row and then inserts the new row.
+``` sql
+REPLACE INTO table_name (col1, col2, col3)
+VALUES (val1, val2, val3);
+
+CREATE TABLE Users (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+
+INSERT INTO Users VALUES (1, 'Vaishali', 25);
+
+-- If we do REPLACE
+REPLACE INTO Users (id, name, age)
+VALUES (1, 'Vaishali Bhoyar', 26);
+-- It inserts the new row with updated values.
+
+REPLACE INTO Users SET id = 1, name = 'Alice', age = 26;
+-- works same
+
+REPLACE INTO Users (id, name, age)
+SELECT id, name, age FROM customer WHERE id = 1;
+-- works same
+```
+- it is not same as ON DUPLICATE KEY UPDATE
+``` sql
+INSERT INTO Users (id, name, age)
+VALUES (1, 'Vaishali Bhoyar', 26)
+ON DUPLICATE KEY UPDATE
+name = VALUES(name), age = VALUES(age);
+-- this will directly update the existing row
+-- it does not delete the old row first and then insert a new row
+```
