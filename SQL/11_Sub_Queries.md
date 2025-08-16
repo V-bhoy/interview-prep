@@ -22,6 +22,7 @@ WHERE dept_id = (SELECT dept_id FROM Departments WHERE dept_name = 'HR');
 ```
 ## FROM Clause 
 - treat inner query result as a temporary table (a.k.a. derived table).
+- Every derived table must have an alias
 ``` sql
 SELECT dept, COUNT(*) as emp_count
 FROM (SELECT dept_id as dept FROM Employees WHERE salary > 50000) sub
