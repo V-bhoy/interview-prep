@@ -242,6 +242,89 @@ SET TRANSACTION [READ WRITE | READ ONLY];
 -- example
 SET TRANSACTION READ ONLY;
 ```
+### LOCK
+- A lock is a mechanism in SQL used to control concurrent access to data.
+- When multiple users/transactions try to read or modify the same data at the same time, locks ensure data consistency and prevent conflicts.
+- WHY DO WE NEED LOCKS ?
+   - Avoid problems like:
+      - Lost update (two users overwrite each other’s changes).
+      - Dirty read (reading uncommitted data).
+      - Non-repeatable read (same query returns different results in the same transaction).
+- TYPES
+   - Shared Lock (Read Lock)
+       - Allows multiple transactions to read a resource (table/row).
+       - But prevents other transactions from writing until the lock is released.
+       - Example: If Transaction A reads data, Transaction B can also read, but cannot update until A releases the lock.
+   - Exclusive Lock (Write Lock)
+	   - Only one transaction can read & write.
+	   - Prevents both reading and writing by others until the transaction is finished.
+   - Row-Level Lock
+       - Locks only the specific row being modified.
+       - More concurrency, less blocking.
+   - Table-Level Lock
+       - Locks the entire table.
+       - Simpler but reduces concurrency.
+``` sql
+LOCK TABLE Employee IN EXCLUSIVE MODE;
+-- This prevents others from reading/writing to Employee until the transaction is committed/rolled back.
+
+-- The same can be written as
+-- For Read Lock
+LOCK TABLE Employee READ
+-- For Write Lock
+LOCK TABLE Employee WRITE
+
+SELECT * FROM Employee
+WHERE EmpID = 101
+FOR UPDATE;
+-- This locks the row for EmpID = 101 so no one else can update/delete it until you COMMIT or ROLLBACK.
+
+
+-- to view operations being performed
+SHOW PROCESSLIST;
+
+-- REAL WORLD EXAMPLE
+CREATE TABLE Bank_Account (
+    AccNo INT PRIMARY KEY,
+    HolderName VARCHAR(50),
+    Balance DECIMAL(10,2)
+);
+
+-- Multiple users can read at the same time, but no one can update/delete until lock is released.
+-- Transaction A
+LOCK TABLE Bank_Account READ;
+SELECT * FROM Bank_Account WHERE AccNo = 101;
+-- ✅ Other users can still read, but cannot update/delete AccNo=101 until A commits.
+-- Suppose you are generating a bank account statement.
+-- You want to read consistent data while ensuring no one modifies it during your transaction i.e statement generation.
+
+-- Only one transaction can read/write. Others are blocked from reading & writing.
+-- Transaction A
+LOCK TABLE Bank_Account WRITE;
+UPDATE Bank_Account
+SET Balance = Balance - 500
+WHERE AccNo = 101;
+-- ❌ Other users cannot read or write until this COMMIT/ROLLBACK
+
+
+-- Locks only specific rows, not the entire table. Used with SELECT … FOR UPDATE.
+-- Transaction A
+SELECT * FROM Bank_Account
+WHERE AccNo = 101
+FOR UPDATE;
+-- ✅ Only row with AccNo = 101 is locked.
+-- Other rows (AccNo = 102, 103) are free to read/write.
+
+--  Locks the whole table, so no other transaction can read or write until released.
+-- Transaction A
+LOCK TABLE Bank_Account WRITE;
+-- ✅ Now no one can read or write any row in Bank_Account table
+-- until Transaction A COMMIT/ROLLBACK.
+```
+- Locks are automatically released when:
+    - Transaction ends (COMMIT or ROLLBACK)
+	- Session ends
+    - using command ```UNLOCK TABLES;```
 ### TCL Workflow Example
 ``` sql
 START TRANSACTION;
