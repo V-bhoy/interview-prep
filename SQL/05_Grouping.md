@@ -30,6 +30,7 @@ GROUP BY department;
 ## Aggregate Functions
 - used to perform calculations on the groups/ category by the GROUP BY clause
 - these are are built-in functions
+- Aggregate functions cannot be nested
 - Without GROUP BY, they work on the entire result set as one group.
 ### COUNT()
 - used to give the count, total number of rows in a group
