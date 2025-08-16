@@ -86,6 +86,7 @@ FROM Project p RIGHT JOIN Employee e ON p.EmpID = e.EmpID;
 ## CROSS JOIN
 -  Returns the Cartesian product of two tables (every row of A with every row of B).
 -  Use Case: Useful for generating combinations.
+-  When no Join condition is mentioned with any JOIN, it behaves like cross join and gives respective result.
 ``` sql
 SELECT Customers.customer_name, Products.product_name
 FROM Customers
