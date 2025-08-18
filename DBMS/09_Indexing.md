@@ -110,6 +110,7 @@ Right child full (41, 75, 98) → split at 75, push to parent.
 - An index is created on one or more columns of a table.
 - DBMS maintains an index file separate from the actual data file.
 - Index file contains search keys + pointers to the data rows.
+- Index file is always sorted.
 ``` sql
 -- Suppose we have a table:
 CREATE TABLE Students (
@@ -135,7 +136,7 @@ ON Employee(Department, Salary);
 ```
 ## Types of Indexing
 ## Clustered Indexing (Primary Indexing)
-- order of rows inside the data pages, match with the order of the index values.
+- order of rows inside the data pages, match with the order of the index values (could be primary key or non-primary key).
 - Leaf nodes of the B+ Tree = actual table rows.
 - Rows in the table are physically stored in the order of the index key.
 - Only one clustered index per table, because data can only be ordered one way.
@@ -152,6 +153,7 @@ ON Employee(Department, Salary);
      - Data file is sorted w.r.t primary key attribute.
      - PK will be used as search-key in Index.
      - Sparse Index will be formed i.e., no. of entries in the index file = no. of blocks in datafile.
+     - no need of dense index.
 - Based on Non-Key attribute
      - Data file is sorted w.r.t non-key attribute.
      - No. Of entries in the index = unique non-key attribute value in the data file.
@@ -172,6 +174,7 @@ dept.
 applied.
 - No. Of entries in the index file = no. of records in the data file.
 - It's an example of Dense index.
+- Here although the rows in the table is unsorted but the index table is sorted where we can find the corresponding block address woth binary search and then search in the given block.
 
 ## NOTE
 - By default, DBMS only creates:
