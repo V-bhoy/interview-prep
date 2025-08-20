@@ -97,17 +97,36 @@ Now, queries for Asian users hit only Shard 1 → faster, scalable.
 - Sharding = split data across multiple databases/servers.
 
 ## When to use partitioning & sharding?
-🔹 Use Partitioning (inside 1 DB server) when:
-	1.	Data is large, but still fits on one server
-	•	Example: A few hundred million rows in one table.
-	•	Partitioning keeps queries efficient by scanning only a subset.
-	2.	Queries usually target a subset of data
-	•	Example: Orders table → queries are usually “last 3 months only.”
-	•	Range partitioning by date speeds this up.
-	3.	You want better maintenance & performance
-	•	Easier to archive/drop old partitions.
-	•	Backups and indexing become faster.
+### Use Partitioning (inside 1 DB server) when:
+- Data is large, but still fits on one server
+  - Example: A few hundred million rows in one table.
+  - Partitioning keeps queries efficient by scanning only a subset.
+- Queries usually target a subset of data
+   - Example: Orders table → queries are usually “last 3 months only.”
+   - Range partitioning by date speeds this up.
+- You want better maintenance & performance
+   - Easier to archive/drop old partitions.
+   - Backups and indexing become faster.
+- Example:
+   - E-commerce orders table with 5 years of data.
+   - Most queries look at recent 6 months → use range partitioning by date.
+### Use Sharding (across multiple servers) when:
+- Data is too large for one server (storage limit)
+   - Example: Billions of rows in users or transactions.
+   - Even with partitioning, a single machine runs out of disk/CPU.
+- High query load / high concurrency
+   - One server can’t handle thousands of queries per second.
+   - Shards split the load across many servers.
+- Geographical distribution is needed
+   - Users in Asia query faster if their shard is hosted in an Asia data center.
+- You want horizontal scaling (add more servers easily)
+   - When traffic grows, just add a new shard.
+- Example:
+   - A social media app with 1 billion users.
+   - Partitioning alone won’t help; you need to shard users by region or user_id % N.
+⸻
+### Simple Rule of Thumb
+- Partitioning = for performance optimization inside one DB server.
+- Sharding = for scalability across multiple servers when one server isn’t enough.
+⸻
 
-📌 Example:
-	•	E-commerce orders table with 5 years of data.
-	•	Most queries look at recent 6 months → use range partitioning by date.
