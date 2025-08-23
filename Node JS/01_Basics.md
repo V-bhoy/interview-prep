@@ -76,7 +76,16 @@
 - What are modules?
     - modules are packages/files (reusable block of code) that helps to organize code in a way that it can be reused again, separate concerns and improve maintainability.
     - When you require() a module, Node.js loads and executes it once, then caches the result.
-	•	If you require the same module again, Node doesn’t re-run the file, it just returns the cached version.
+	- If you require the same module again, Node doesn’t re-run the file, it just returns the cached version.
+    - This improves performance, since modules aren’t repeatedly loaded.
+
+## What is REPL (Read, Evaluate, Print, Loop)?
+- interactive shell for JS
+- ideal for quick testing and debugging code snippets on fly
+- offers help commands
+- supports saving and loading code sessions
+- provides direct access to nodeJS APIs for experimentation
+- allows customization of prompt and behaviour settings
  
 
   
