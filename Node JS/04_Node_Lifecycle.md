@@ -71,7 +71,7 @@ d. OS
      - Each process has its own memory space, its own event loop. Its own V8 engine instance. They don’t share event loops.
      - They can only talk to each other via IPC (inter-process communication), OS sockets, or something like Redis/message queues.
      - ```process.exit()``` will stop the event loop for that particular process.
-⸻
+---
 ## NodeJS Lifecycle
 ## 1. Startup / Initialization
 -  You run node app.js.
