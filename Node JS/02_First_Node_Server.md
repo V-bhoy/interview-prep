@@ -37,4 +37,31 @@
    - used in online banking, e commerce
 - **TCP (Transmission Control Protocol)**
    - ensures reliable, ordered, error checked data delivery over the internet
-   - establishes connection before the data is transferred 
+   - establishes connection before the data is transferred
+
+## How to create a node server?
+- create an http server using built in http module
+- below is the snippet of app.js
+- http.createServer()
+    - Creates the server
+    - It takes a callback with arguments (req, res) which runs whenever a client makes a request.
+    - In the snippet, the requestListener is the callback function
+- server.listen()
+    - Makes the server listen on a specific port, if not given, it wont listen to incoming requests on the server
+    - It also takes a callback which is optional, that runs immediately after server starts listening on given port.
+- Run the file using command - ```node app.js```
+- as soon as you enter the server address in your browser, the browser sends a req object, which the server listens and is logged in the callback function as per the below code snippet
+``` javascript
+// import http module to use it in the app.js file
+const http = require('http');
+
+function requestListener(req, res){
+   console.log(request);
+}
+
+const PORT = 3000;
+const server = http.createServer(requestListener);
+server.listen(PORT, ()=>{
+  console.log(`Server running on address: http://localhost:${PORT}`);
+});
+```
