@@ -65,3 +65,58 @@ server.listen(PORT, ()=>{
   console.log(`Server running on address: http://localhost:${PORT}`);
 });
 ```
+## What is the req and res object in the create server callback?
+### req (request object)
+-  Instance of http.IncomingMessage
+-  Contains info about the client’s request
+-  Common properties:
+  - req.url → the path requested (/, /about, etc.)
+  - req.method → HTTP method (GET, POST, etc.)
+  - req.headers → headers (user-agent, content-type, etc.)
+  - req.on("data") → used to read request body (for POST/PUT)
+### res (response object)
+- Instance of http.ServerResponse
+- Used to send data back to the client
+- Common methods:
+  - res.writeHead(statusCode, headers) → set response headers
+  - res.write(data) → write body (can be called multiple times)
+  - res.end([data]) → end response (must always be called)
+``` javascript
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.write("Hello, this is your server!\n");
+  res.end("Goodbye!");
+});
+
+server.listen(3000);
+```
+## How do you route in nodejs?
+- Routing means deciding what response to send based on the URL and method.
+``` javascript
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+  if (req.url === "/" && req.method === "GET") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("Welcome to Home Page!");
+  } else if (req.url === "/about" && req.method === "GET") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("This is About Page.");
+  } else if (req.url === "/api/data" && req.method === "GET") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ message: "Hello from API" }));
+  } else {
+    res.writeHead(404, { "Content-Type": "text/plain" });
+    res.end("404 Not Found");
+  }
+});
+
+server.listen(3000, () => {
+  console.log("Server running at http://localhost:3000");
+});
+```
+- req.url helps match path (like /about)
+- req.method helps match HTTP method (GET, POST, etc.)
+- Based on these, you implement simple if/else routing.
