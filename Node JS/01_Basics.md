@@ -72,12 +72,15 @@
  
 ## How to execute JS file in node?
 - command - ```node filename.js``` assuming that the path  in the terminal  is the current folder where file is located.
-- require syntax - ```require('modulename')``` is written in the beginning of JS file in order to include any other JS file or built in or external modules.
+- require syntax - ```require('modulename')``` is written in the beginning of JS file in order to include any other JS file or built in or external modules. ```.js``` is added automatically after the module name in require syntax.
+- In modern ES, import keyword is used.
 - What are modules?
     - modules are packages/files (reusable block of code) that helps to organize code in a way that it can be reused again, separate concerns and improve maintainability.
     - When you require() a module, Node.js loads and executes it once, then caches the result.
 	- If you require the same module again, Node doesn’t re-run the file, it just returns the cached version.
     - This improves performance, since modules aren’t repeatedly loaded.
+- NodeJS searches for these modules in core, node_modules directory and file paths.
+- For local file module, you need add the relative path in reequire syntax.
 
 ## What is REPL (Read, Evaluate, Print, Loop)?
 - interactive shell for JS
