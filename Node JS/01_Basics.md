@@ -81,6 +81,26 @@
     - This improves performance, since modules aren’t repeatedly loaded.
 - NodeJS searches for these modules in core, node_modules directory and file paths.
 - For local file module, you need add the relative path in reequire syntax.
+- To export local modules, you use -->
+``` javascript
+// single resource
+module.exports = functionHandler;
+// This is imported as
+const abc = require(relativePath);
+
+
+// multiple resources
+module.exports = {
+resourceA: handler1,
+resourceB: handler2
+}
+// This is imported as
+const abc = require(relativePath);
+// To use resourceA
+abc.resourceA
+// To use resourcB
+abc.resourceB
+```
 
 ## What is REPL (Read, Evaluate, Print, Loop)?
 - interactive shell for JS
