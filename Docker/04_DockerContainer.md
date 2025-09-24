@@ -20,3 +20,7 @@ docker run -p 3000:3000 myapp:1.0
 ```
 docker ps
 ```
+- To stop the container
+```
+docker stop container-name
+```
