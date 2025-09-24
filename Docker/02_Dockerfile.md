@@ -34,4 +34,7 @@ CMD ["npm", "start"]
   - Docker reads the file line by line → creates layers for the image
 	- Builds a ready-to-run image
 	- Run docker run myapp → container starts with all dependencies pre-installed
+ 
+ ## .dockerignore
+ - we mention all the files here, that we do not want to be included in our image
 
