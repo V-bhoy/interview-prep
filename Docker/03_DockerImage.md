@@ -35,3 +35,33 @@
 - A repository can be public or private.
 - A public repository is where anyone can pull the image for free.
 - A private repository is where only authorized users can pull/push. Good for proprietary apps.
+- A repositpry lives inside a registry (public / private)
+- Namespace groups repositories under a user or organization.
+```
+	•	Example:
+	•	vaishali/myapp:1.0
+	•	openai/gpt-app:2.0
+	•	Here, vaishali or openai is the namespace.
+```
+```
+Registry (Docker Hub / AWS ECR / Private Registry)
+   └── Namespace (user/org)
+         └── Repository (image name)
+               └── Tags (versions)
+```
+### Pushing & Pulling Docker Images
+- **Pulling an Image**
+```docker pull <image-name>:<tag>```
+- 	Downloads the image from a registry (like Docker Hub or AWS ECR) to your local machine
+- 	use case: Run prebuilt images (databases, programming runtimes, OS images) without building them yourself.
+- **Pushing an Image**
+- First, you need to build an image locally
+```docker build -t vaishali/myapp:1.0 .```
+- Login to the registry - ```docker login```
+- Push to registry - ```docker push vaishali/myapp:1.0```
+- Uploads the image from your local repository to a remote registry.
+- Use Case:
+    - Share images with team members.
+    - Deploy applications to servers or cloud.
+    - Store your image versions safely.
+
