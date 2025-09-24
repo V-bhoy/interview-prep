@@ -65,3 +65,20 @@ Registry (Docker Hub / AWS ECR / Private Registry)
     - Deploy applications to servers or cloud.
     - Store your image versions safely.
 
+### Updating Docker Images
+-  Docker images are immutable (once built, they don’t change). That’s by design — it ensures consistency and repeatability. But in development, we obviously need to keep changing code and testing.
+**Rebuild the image**
+-  If you change your application code, you can rebuild the image with the same name, it will simply replace the old image.
+-  Used more in production workflows (where immutability is important).
+**Bind mounts for live code update**
+- Instead of baking the code into the image every time, you mount your host source code into the container:
+- ```docker run -v $(pwd):/usr/src/app myapp```
+- This way, when you edit files on your host machine, changes are instantly reflected inside the container.
+- Common in development, because you don’t want to rebuild the image for every code change.
+**Hot-reload tools inside containers**
+- You combine bind mounts with tools like nodemon (for Node.js), spring-boot-devtools (for Java), etc.
+- They automatically reload the application inside the container when files change.
+```
+Development → use bind mounts + hot reload for fast iteration.
+Production → bake your code + dependencies into an immutable image and push it to a registry. That way, everyone runs the same thing.
+```
