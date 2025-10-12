@@ -100,6 +100,8 @@
   Once the TLS handshake is done:
 	•	All HTTP requests (GET, POST, etc.) and responses are encrypted.
 	•	Even if someone intercepts packets, they only see encrypted gibberish.
+  
+  https://youtu.be/EnY6fSng3Ew?si=Fm-gXScLZi12diAy
   ```
   
   4. The request is sent from client to the server for and the server sends html, css, js in response.
