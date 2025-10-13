@@ -105,5 +105,21 @@
   ```
   
   4. The request is sent from client to the server for and the server sends html, css, js in response.
-  5. The browser parses HTML --> creates DOM, parses CSS - creates CSSOM, merges both to create a render tree. After that the positioning and sizes is calculated for the elements in the render tree and the the pixels are drawn on the screen. This is how a webpage is displayed on the screen.
+  5. The browser parses HTML --> creates DOM, parses CSS - creates CSSOM, merges both to create a render tree. Each node has both content and style information. After that the positioning and sizes is calculated for the elements in the render tree and the the pixels are drawn on the screen. Finally, all layers are combined into one final image displayed on your screen. This is how a webpage is displayed on the screen.
   6. If a JS file is seen when parsing HTML, it pauses the parsing and fetches and executes JS first and then continues the parsing of HTML which can cause unusual behaviour. To avoid this you can add the script tag at the bottom of html page or use defer/async attribute. defer means the browser downloads script in parallel with HTML parsing.But execution is deferred until the entire HTML is parsed.	All deferred scripts execute in order of appearance. Scripts are executed after DOM is ready, before DOMContentLoaded. While async makes browser to download script in parallel with HTML parsing. Once the script finishes downloading, browser pauses HTML parsing, executes it immediately, then resumes HTML parsing after. Best for independent scripts (like analytics or ads).
+
+## What is critical rendering path in a browser?
+- The Critical Rendering Path is the sequence of steps a browser takes to convert HTML, CSS, and JavaScript into pixels on the screen — i.e., how a web page goes from code → actual visible UI. The faster this path completes, the faster your page appears to the user.
+- By default:
+   - CSS files are render-blocking — the browser must wait for them before it can render content (since it can’t paint without knowing styles).
+   - JavaScript files can also block rendering (since they may modify the DOM or CSSOM).
+
+## How to optimize the critical rendering path?
+- Minimize critical resources - Only load what’s needed for initial view.
+- Defer non-critical JS - Use defer or async to prevent blocking rendering.
+- Inline critical CSS - Embed small, above-the-fold CSS directly in HTML.
+- Lazy load images - Load below-the-fold images later.
+- Use caching & compression - Reduce network time.
+
+## What is progressive rendering?
+- Progressive Rendering is a performance optimization technique where a web page is rendered and displayed to the user in chunks (progressively) — instead of waiting for the entire page and all its resources to load first. Show users something as soon as possible rather than making them wait for the full page to be ready.
