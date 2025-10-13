@@ -36,3 +36,59 @@ function Form() {
 ```
 setCount(prevCount => prevCount + 1);
 ```
+## What is use effect hook?
+- it is used to perform side effects in functional components like -
+   - fetching data from API.
+   - subscribing to events.
+   - setting up timers
+   - manually manipulating the DOM.
+- Before hooks, these were handled by lifecycle methods in class components (componentDidMount, componentDidUpdate, componentWillUnmount).
+useEffect unifies all of these in functional components.
+```
+useEffect(() => {
+  // Side effect logic
+  return () => {
+    // Cleanup (optional)
+  };
+}, [dependencies]);
+Effect function → first argument, runs after first render
+Cleanup function → optional, runs before unmounting or before the next effect
+Dependency array → second argument, controls when the effect runs
+no array → run after every render (not recommended)
+```
+- Component Did Mount (Run once)
+```
+import React, { useEffect } from "react";
+
+function App() {
+  useEffect(() => {
+    console.log("Component mounted");
+  }, []); // empty array → runs only once
+
+  return <h1>Hello, Vaishali 👋</h1>;
+}
+```
+- Component Did Update (Run on state/prop change)
+```
+import React, { useState, useEffect } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    console.log("Count changed:", count);
+  }, [count]); // runs every time 'count' changes
+
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+```
+- Example 3: Cleanup (like componentWillUnmount)
+```
+useEffect(() => {
+  const timer = setInterval(() => {
+    console.log("Tick");
+  }, 1000);
+
+  return () => clearInterval(timer); // cleanup on unmount
+}, []);
+```
