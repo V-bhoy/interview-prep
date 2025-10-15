@@ -166,7 +166,121 @@ o/p -->
 Caught in middle: Step 2 failed
 Caught at end: Step 2 failed
 ```
-### Async Await
+## Promise APIS
+### Promise.all()
+- takes an array of promises as arg
+- return a promise
+- resolves only when all promises are resolved or there are no promises in the array.
+- immediately rejected when any of the promise is rejected
+``` javascript
+function f1(){
+   return new Promise((resolve, reject)=>{
+     setTimeout(()=>{ resolve(5000)}, 1000);
+})
+}
+function f2(){
+   return new Promise((resolve, reject)=>{
+     setTimeout(()=>{ resolve(8000)}, 3000);
+})
+}
+function f3(){
+   return new Promise((resolve, reject)=>{
+     setTimeout(()=>{ resolve(1000)}, 2000);
+})
+}
+Promise.all([f1(), f2(), f3()]).then((values)=> console.log(values)).catch(err=>console.log(err));
+values --> [5000, 8000, 1000]
+
+scratch
+
+function myPromiseAll(arrOfPromises){
+   if(arrOfPromises.length == 0){
+       return Promise.resolve([]);
+   }
+   const values = [];
+   let counter = 0;
+   return new Promise((resolve, reject)=>{
+      arrOfPromises.forEach((p, i)=>{
+             if(p instanceof Promise == false){
+                p = Promise.resolve(p);
+             }
+             p.then((value)=>{
+                counter += 1;
+                values[i] = value;
+                if(counter == arrOfPromises.length) {
+                   resolve(values);
+                }
+             }).catch(err=>reject(err));
+       }) 
+   })
+}
+
+```
+### Promise.allSettled()
+- returns a fulfilled promise, with an array of promise results.
+- it returns all the promise results even if any of the promise is fulfilled / rejected.
+- the promise result is an object -> if fulfilled -> {status: fulfilled, value} , if rejected -> {status: rejected, reason}
+- if an empty array, the value is an empy array
+``` javascript
+Promise.allSettled([f1(), f2(), f3()]).then((values)=> console.log(values))
+values --> [
+   {status: 'fulfilled', value: 5000},
+   {status: 'fulfilled', value: 8000},
+   {status: 'fulfilled', value: 1000}, 
+]
+
+// scratch
+function myPromiseAllSettled(arrOfPromises){
+   if(arrOfPromises.length == 0){
+       return Promise.resolve([]);
+   }
+   const values = [];
+   let counter = 0;
+   return new Promise((resolve, reject)=>{
+      arrOfPromises.forEach((p, i)=>{
+             if(p instanceof Promise == false){
+                p = Promise.resolve(p);
+             }
+             p.then((value)=>{
+                counter += 1;
+                values[i] = {
+                   status: 'fulfilled',
+                   value
+                 };
+                if(counter == arrOfPromises.length) {
+                   resolve(values);
+                }
+             }).catch(err=>{
+                 counter += 1;
+                values[i] = {
+                   status: 'rejected',
+                   reason: err
+                 };
+                if(counter == arrOfPromises.length) {
+                   resolve(values);
+                }
+ });
+       }) 
+   })         
+}
+
+```
+### Promise.race()
+- returns the first promise that is either resolved/ rejected
+- doesn't wait for any other promises
+- if you pass an empty array, the promise continues to be in a pending state
+```
+Promise.race([f1(), f2(), f3()]).then((value)=> console.log(value)).catch(err => console.log(err))
+value --> 5000 since f1 is resolved in 1 second
+the promise is rejected if the first promise settled is rejected
+```
+### Promise.any()
+- returns the first fulfilled promise, it waits until any of the promise is resolved to be fulfilled.
+- if the none of the promise is resolved, it returns an aggregate error object having all the errors of the rejected promises.
+- even when you pass an empty array -> the promise is rejected
+  
+## Async Await
+- syntactic feature that allows asynchronus function to be structured in a way similar to an ordinary synchronous function (synchronous looking async code)
 - more simple than promise chains
 - we use async keyword with a function declaration to define it as an asynchronous function
 - an async function always returns a promise
@@ -178,6 +292,9 @@ console.log(sayHello()); // returns a promise which is immediately resolved with
 ```
 - await keyword pauses the execution of its surrounding async function until the promise is settled.
 - it can be used only inside an async function
+- Internally, await works like a .then() — it pauses the async function until the Promise resolves, and resumes execution by placing the continuation in the microtask queue.
+- It doesn’t block the main thread and can run Promises in sequence or in parallel using Promise.all().
+---
 - let's modify the previous getData example with async await
 ``` javascript
 async function getData(id){
@@ -238,5 +355,31 @@ getUser()
   await getData(3);
   await getData(4);
 })()
+```
+## How Promises Work in Parallel with Async/Await
+- By default, await executes sequentially:
+```
+async function sequential() {
+  const p1 = await fetch("url1");
+  const p2 = await fetch("url2");
+  return [p1, p2];
+}
+Here:
+	•	fetch("url1") completes → only then fetch("url2") starts.
+	•	Total time = t1 + t2 (slow).
+```
+- ⚡ To run in parallel:
+- Start the Promises first, then await them together:
+```
+async function parallel() {
+  const p1 = fetch("url1");
+  const p2 = fetch("url2");
+
+  const [res1, res2] = await Promise.all([p1, p2]);
+  return [res1, res2];
+}
+	•	Both requests start at once ✅
+	•	You wait for both to finish ✅
+	•	Total time = max(t1, t2) (faster)
 ```
 
